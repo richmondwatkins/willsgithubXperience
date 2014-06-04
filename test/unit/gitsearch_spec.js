@@ -11,7 +11,6 @@ process.env.DBNAME = 'will';
 var app = require('../../app/app');
 var request = require('supertest');
 var traceur = require('traceur');
-
 var GitSearch;
 
 describe('gitSearch', function(){
@@ -24,10 +23,10 @@ describe('gitSearch', function(){
     });
   });// end before
 
-  describe('.getGitUsersByLocation', function(){
-    it('should return an array of Git users', function(done){
-      GitSearch.getGitUsersByLocation('nashville', function(users){
-        console.log(users);
+  describe('.getReposByLocation', function(){
+    it('should return an array of Git repos based on location', function(done){
+      GitSearch.getReposByLocation('nashville', function(repos){
+        console.log(repos);
         done();
       });
     });

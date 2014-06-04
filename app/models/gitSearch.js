@@ -2,22 +2,41 @@
 'use strict';
 var async = require('async');
 var request = require('request');
-var client = request.newClient('http://localhost:5000/');
-
+var _ = require('lodash');
 
 class GitSearch{
-
-
-
   static getGitUsersByLocation(location, fn){
-      request('https://api.github.com/search/users?q=location:'+location+'&per_page=100&page=3?access_token=30a6a5b5ce1ff32e995409afb5b19f611a996374', function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        fn(body); // Print the google web page.
-      }
+    console.log(location);
+    var url = 'https://api.github.com/search/users?q=location:'+location+'&per_page=100&page=3?access_token=30a6a5b5ce1ff32e995409afb5b19f611a996374';
+      request({headers:{'User-Agent':'richmondwatkins'}, url:url}, function (error, response, body) {
+        body = eval('(' + body + ')');
+        var logins = body.items.map(user=>user.login);
+        fn(logins); // Print the google web page.
     });
   }
 
-
+  static getReposByLocation(location, callBack){
+    GitSearch.getGitUsersByLocation(location, logins=>{
+      var tasks = [];
+      logins.forEach(login=>{
+        tasks.push((fn)=>{
+          var url = 'https://api.github.com/users/'+login+'/repos?access_token=30a6a5b5ce1ff32e995409afb5b19f611a996374';
+          request({headers:{'User-Agent':'richmondwatkins'}, url:url}, function(error, response, body){
+            var repos = eval('('+body+')');
+            fn(null, repos);
+          });
+        });
+      });
+      async.parallel(tasks, (e, results)=>{
+        results = _.flatten(results);
+        var languages = _(results.map(r=>r.language)).compact().valueOf();
+        var uniques = {};
+        _.uniq(languages).forEach(lang=> uniques[lang] = 0);
+        languages.forEach(lang=>uniques[lang]++);
+        callBack(uniques);
+      });
+    });
+  }
 
 }
 
