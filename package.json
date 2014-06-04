@@ -41,7 +41,9 @@
     "supertest":            "*",
     "coveralls":            "*",
     "mocha-lcov-reporter":  "*",
-    "blanket":              "*"
+    "blanket":              "*",
+    "async":                "*",
+    "request":              "*"
   },
   "config": {
     "blanket": {
