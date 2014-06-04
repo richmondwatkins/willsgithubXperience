@@ -3,11 +3,12 @@
 var async = require('async');
 var request = require('request');
 var _ = require('lodash');
+var queries = global.nss.db.collection('queries');
 
 class GitSearch{
   static getGitUsersByLocation(location, fn){
     console.log(location);
-    var url = 'https://api.github.com/search/users?q=location:'+location+'&per_page=100&page=3?access_token=30a6a5b5ce1ff32e995409afb5b19f611a996374';
+    var url = 'https://api.github.com/search/users?q=location:'+location+'&per_page=50&page=3?access_token=30a6a5b5ce1ff32e995409afb5b19f611a996374';
       request({headers:{'User-Agent':'richmondwatkins'}, url:url}, function (error, response, body) {
         body = eval('(' + body + ')');
         var logins = body.items.map(user=>user.login);
@@ -16,6 +17,8 @@ class GitSearch{
   }
 
   static getReposByLocation(location, callBack){
+    var total = 0;
+    var gitSearch = new GitSearch();
     GitSearch.getGitUsersByLocation(location, logins=>{
       var tasks = [];
       logins.forEach(login=>{
@@ -34,8 +37,14 @@ class GitSearch{
         _.uniq(languages).forEach(lang=> uniques[lang] = 0);
         languages.forEach(lang=>uniques[lang]++);
         callBack(uniques);
+        console.log(uniques);
+        gitSearch.languages = uniques;
+        gitSearch.location = location;
+        queries.save(gitSearch, ()=>{});
       });
     });
+
+
   }
 
 }

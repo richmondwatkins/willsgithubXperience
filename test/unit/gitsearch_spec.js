@@ -25,8 +25,7 @@ describe('gitSearch', function(){
 
   describe('.getReposByLocation', function(){
     it('should return an array of Git repos based on location', function(done){
-      GitSearch.getReposByLocation('nashville', function(repos){
-        console.log(repos);
+      GitSearch.getReposByLocation('sf', function(repos){
         done();
       });
     });
