@@ -28,7 +28,9 @@
     "socket.io":       "*",
     "bcrypt":          "*",
     "cookie-session":  "*",
-    "cookies":         "*"
+    "cookies":         "*",
+    "async":           "*",
+    "request":         "*"
   },
   "devDependencies": {
     "grunt":                "*",
@@ -41,9 +43,7 @@
     "supertest":            "*",
     "coveralls":            "*",
     "mocha-lcov-reporter":  "*",
-    "blanket":              "*",
-    "async":                "*",
-    "request":              "*"
+    "blanket":              "*"
   },
   "config": {
     "blanket": {
