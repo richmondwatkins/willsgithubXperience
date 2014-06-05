@@ -14,13 +14,17 @@
     $('#about').click(about);
   }
 
-  function about(){
+  function about(event){
     $('#button').hide();
     $('#about-us').slideToggle();
+
+    event.preventDefault();
   }
 
-  function showButton(){
+  function showButton(event){
     $('#button').fadeIn();
+
+    event.preventDefault();
   }
 
   function search(){
