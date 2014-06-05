@@ -6,10 +6,24 @@
   $(document).ready(init);
 
   function init(){
+    $('#button').hide();
+    $('#about-us').hide();
+    $('#query').click(showButton);
     $('#search').click(search);
+    $('#about').click(about);
+  }
+
+  function about(){
+    $('#button').hide();
+    $('#about-us').slideToggle();
+  }
+
+  function showButton(){
+    $('#button').fadeIn();
   }
 
   function search(){
+    $('#about-us').hide();
     var query = $('#query').val().toLowerCase().trim();
     console.log(query);
 
