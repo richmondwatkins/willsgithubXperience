@@ -6,6 +6,7 @@
   $(document).ready(init);
 
   function init(){
+    $('#repos-header ').hide();
     $('#button').hide();
     $('#about-us').hide();
     $('#query').click(showButton);
@@ -29,6 +30,8 @@
 
   $.ajax({url: '/search', type:'get', dataType: 'JSON', data: {location: query}, success: response=>{
       makeChart(response.languages);
+      $('#repos-header').show();
+      $('#repos').empty().append(response.numRepos);
   }});
   }
 
