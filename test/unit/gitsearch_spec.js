@@ -23,9 +23,11 @@ describe('gitSearch', function(){
     });
   });// end before
 
-  describe('.getReposByLocation', function(){
-    it('should return an array of Git repos based on location', function(done){
-      GitSearch.getReposByLocation('sf', function(repos){
+
+  describe('.search', function(){
+    it('should return data from db if already searched, or create a new record', function(done){
+      GitSearch.search('la', function(data){
+        console.log(data);
         done();
       });
     });

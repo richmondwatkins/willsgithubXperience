@@ -1,41 +1,66 @@
+/* global AmCharts:true */
+
 (function(){
   'use strict';
 
   $(document).ready(init);
 
   function init(){
-    get();
+    $('#search').click(search);
   }
 
+  function search(){
+    var query = $('#query').val().toLowerCase().trim();
+    console.log(query);
 
+  $.ajax({url: '/search', type:'get', dataType: 'JSON', data: {location: query}, success: response=>{
+      makeChart(response.languages);
+  }});
+  }
 
-  function get() {
-    var url = 'https://api.github.com/search/users?q=location:nashville&per_page=100&page=3?access_token=30a6a5b5ce1ff32e995409afb5b19f611a996374';
-    $.getJSON(url, data=>{
-
-    for(var i = 0; i <data.items.length; i++){
-       var logins = data.items[i].login;
-
-      repos(logins);
+  var chart;
+  function makeChart(response){
+      chart = AmCharts.makeChart('chart', {  //#chart div
+        'theme': 'none',
+        'type': 'serial',
+        'startDuration': 2,
+          'dataProvider': response,    //response from ajax
+          'valueAxes': [{
+              'position': 'left',
+              'title': 'Languages On Github By Location'
+          }],
+          'graphs': [{
+              'balloonText': '[[category]]: <b>[[value]]</b>',
+              'colorField': 'color',
+              'fillAlphas': 1,
+              'lineAlpha': 0.1,
+              'type': 'column',
+              'valueField': 'count'  //count
+          }],
+          'depth3D': 20,
+        'angle': 30,
+          'chartCursor': {
+              'categoryBalloonEnabled': false,
+              'cursorAlpha': 0,
+              'zoomable': false
+          },
+          'categoryField': 'language',  //language
+          'categoryAxis': {
+              'gridPosition': 'start',
+              'labelRotation': 90
+          },
+        'exportConfig':{
+          'menuTop':'20px',
+              'menuRight':'20px',
+              'menuItems': [{
+              'icon': '/lib/3/images/export.png',
+              'format': 'png'
+              }]
+          }
+      });
     }
-    console.log(langArray);
-  });
-  }
 
-  function repos(logins) {
-    var url = 'https://api.github.com/users/'+logins+'/repos?access_token=30a6a5b5ce1ff32e995409afb5b19f611a996374';
-    $.getJSON(url, data=>{
-      language(data);
 
-  });
-  }
-
-  var langArray = [];
-   function language(data) {
-     for(var i = 0; i < data.length; i++){
-       langArray.push(data[i].language);
-     }
-  }
 
 
 })();
